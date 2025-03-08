@@ -4,12 +4,16 @@ import Navbar from "./Components/Navbar";
 import ProductList from "./Components/ProductList";
 import SearchBar from "./Components/SearchBar";
 import AuthForm from "./Components/AuthForm";
+import Hero from "./Components/Hero";
+import Footer from "./Components/Footer";
+
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showAuthForm, setShowAuthForm] = useState(false);
   const [authType, setAuthType] = useState("login"); // 'login' or 'register'
+  const [cart, setCart] = useState([]);
 
   const handleSearch = (query) => {
     setSearchQuery(query);
@@ -37,6 +41,7 @@ const handleLogout = () => {
   return (
     <div className="App">
       <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
+    
       {!isLoggedIn && (
         <div className="auth-buttons">
           <button onClick={() => { setShowAuthForm(true); setAuthType("login"); }}>
@@ -52,8 +57,10 @@ const handleLogout = () => {
       )}
       {isLoggedIn && (
         <>
+          <Hero />
           <SearchBar onSearch={handleSearch} />
           <ProductList searchQuery={searchQuery} />
+          <Footer />
         </>
       )}
     </div>
