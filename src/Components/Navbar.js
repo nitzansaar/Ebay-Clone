@@ -1,14 +1,14 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import ebayLogo from "../ebay-logo.png"; // Adjust the path if needed
 
-function Navbar({ isLoggedIn, onLogout }) {
+function Navbar({ isLoggedIn, onLogout, cartCount, onLoginClick, onRegisterClick }) {
   return (
     <nav className="navbar">
       <div className="navbar-left">
-        <img
-          src="https://upload.wikimedia.org/wikipedia/commons/1/1b/EBay_logo.svg"
-          alt="eBay Logo"
-          className="logo"
-        />
+        <Link to="/">
+          <img src={ebayLogo} alt="eBay Logo" className="logo" />
+        </Link>
       </div>
       <div className="navbar-center">
         <input type="text" placeholder="Search for anything" />
@@ -16,11 +16,14 @@ function Navbar({ isLoggedIn, onLogout }) {
       </div>
       <div className="navbar-right">
         {isLoggedIn ? (
-          <button onClick={onLogout}>Logout</button>
+          <>
+            <Link to="/cart">Cart ({cartCount})</Link>
+            <button onClick={onLogout}>Logout</button>
+          </>
         ) : (
           <>
-            <a href="/login">Login</a>
-            <a href="/register">Register</a>
+            <button onClick={onLoginClick}>Login</button>
+            <button onClick={onRegisterClick}>Register</button>
           </>
         )}
       </div>

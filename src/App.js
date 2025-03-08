@@ -1,12 +1,13 @@
 import React, { useState } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import "./App.css";
 import Navbar from "./Components/Navbar";
-import ProductList from "./Components/ProductList";
-import SearchBar from "./Components/SearchBar";
-import AuthForm from "./Components/AuthForm";
 import Hero from "./Components/Hero";
+import SearchBar from "./Components/SearchBar";
+import ProductList from "./Components/ProductList";
 import Footer from "./Components/Footer";
-
+import Cart from "./Components/Cart";
+import AuthForm from "./Components/AuthForm";
 
 function App() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -19,51 +20,70 @@ function App() {
     setSearchQuery(query);
   };
 
+  const handleLogout = () => {
+    setIsLoggedIn(false);
+  };
+
+  const addToCart = (product) => {
+    setCart([...cart, product]);
+    alert(`${product.title} added to cart!`);
+  };
+
+  const removeFromCart = (productId) => {
+    setCart(cart.filter((item) => item.id !== productId));
+  };
+
   const handleAuthSubmit = ({ email, password }) => {
-    // Mock authentication logic
     if (authType === "login") {
+      // Mock login logic
       alert(`Logged in with email: ${email}`);
       setIsLoggedIn(true);
       setShowAuthForm(false);
     } else {
+      // Mock registration logic
       alert(`Registered with email: ${email}`);
       setAuthType("login"); // Switch to login after registration
     }
   };
 
-  // Inside App.js
-const handleLogout = () => {
-  setIsLoggedIn(false);
-  setShowAuthForm(false);
-};
-
-
   return (
-    <div className="App">
-      <Navbar isLoggedIn={isLoggedIn} onLogout={handleLogout} />
-    
-      {!isLoggedIn && (
-        <div className="auth-buttons">
-          <button onClick={() => { setShowAuthForm(true); setAuthType("login"); }}>
-            Login
-          </button>
-          <button onClick={() => { setShowAuthForm(true); setAuthType("register"); }}>
-            Register
-          </button>
-        </div>
-      )}
-      {showAuthForm && (
-        <AuthForm type={authType} onSubmit={handleAuthSubmit} />
-      )}
-      {isLoggedIn && (
-        <>
-          <Hero />
-          <SearchBar onSearch={handleSearch} />
-          <ProductList searchQuery={searchQuery} />
-          <Footer />
-        </>
-      )}
-    </div>
+    <BrowserRouter>
+      <div className="App">
+        <Navbar
+          isLoggedIn={isLoggedIn}
+          onLogout={handleLogout}
+          cartCount={cart.length}
+          onLoginClick={() => {
+            setShowAuthForm(true);
+            setAuthType("login");
+          }}
+          onRegisterClick={() => {
+            setShowAuthForm(true);
+            setAuthType("register");
+          }}
+        />
+        {showAuthForm && (
+          <AuthForm type={authType} onSubmit={handleAuthSubmit} />
+        )}
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <Hero />
+                <SearchBar onSearch={handleSearch} />
+                <ProductList searchQuery={searchQuery} addToCart={addToCart} />
+              </>
+            }
+          />
+          <Route
+            path="/cart"
+            element={<Cart cart={cart} removeFromCart={removeFromCart} />}
+          />
+        </Routes>
+        <Footer />
+      </div>
+    </BrowserRouter>
   );
 }
 

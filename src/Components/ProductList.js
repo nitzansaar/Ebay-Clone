@@ -8,7 +8,7 @@ const products = [
   // Add more products
 ];
 
-function ProductList({ searchQuery }) {
+function ProductList({ searchQuery, addToCart }) {
   const filteredProducts = products.filter((product) =>
     product.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -16,7 +16,7 @@ function ProductList({ searchQuery }) {
   return (
     <div className="product-list">
       {filteredProducts.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard key={product.id} product={product} addToCart={addToCart} />
       ))}
     </div>
   );
